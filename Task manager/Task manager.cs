@@ -11,21 +11,19 @@ namespace Task_manager
     public class TaskManager
     {
         public const string SaveFile = "D:\\Mein progectos\\Task manager";
-        public TaskList Tasks { get; set; }
+        public TaskList Tasks { get; set; } = new();
         public DateTime Current { get; set; }
         public int CurrentPos { get; set; }
         public void Save()
         {
-            List<Event> events = Tasks.Eventsonly();
-            List<Duty> duties = Tasks.Dutiesonly();
-            XmlHelper<List<Event>>.Serialize(events, SaveFile + "\\Events.xml");
-            XmlHelper<List<Duty>>.Serialize(duties, SaveFile + "\\Duties.xml");
+            XmlHelper<List<Event>>.Serialize(Tasks.Eventsonly(), SaveFile + "\\Events.xml");
+            XmlHelper<List<Duty>>.Serialize(Tasks.Dutiesonly(), SaveFile + "\\Duties.xml");
         }
         public void Load()
         {
-            if (new FileInfo(SaveFile + "\\Events.xml").Length > 6)
+            if(File.Exists(SaveFile + "\\Events.xml"))
                 Tasks.Tasklist.AddRange(XmlHelper<List<Event>>.Deserialize(SaveFile + "\\Events.xml"));
-            if (new FileInfo(SaveFile + "\\Duties.xml").Length > 6)
+            if (File.Exists(SaveFile + "\\Duties.xml"))
                 Tasks.Tasklist.AddRange(XmlHelper<List<Duty>>.Deserialize(SaveFile + "\\Duties.xml"));
         }
         public void EditYear()
@@ -101,7 +99,7 @@ namespace Task_manager
         {
             TaskManager manager = new()
             {
-                Tasks = new TaskList(),
+
                 Current = DateTime.Now,
                 CurrentPos = DateTime.Now.Day
             };

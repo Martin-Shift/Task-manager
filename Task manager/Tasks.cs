@@ -138,7 +138,7 @@ public class TaskList
         List<Duty> duties = new();
         foreach (var task in Tasklist)
         {
-            if (task is Duty) { duties.Add(task as Duty); }
+            if (task is Duty) { duties.Add(item: task as Duty); }
         }
         return duties;
     }
