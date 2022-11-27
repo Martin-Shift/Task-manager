@@ -1,4 +1,5 @@
 ﻿using menus;
+using CSharpLesson;
 namespace Tasks;
 public struct Coord
 {
@@ -6,6 +7,7 @@ public struct Coord
     public int Y { get; set; }
     public void Set() { Console.SetCursorPosition(X, Y); }
 }
+
 public abstract class BaseTask
 {
     public DateTime Start { get; set; }
@@ -18,7 +20,6 @@ public abstract class BaseTask
         Name = name;
     }
     public BaseTask() { }
-    public abstract void Print();
     public abstract string Info();
 }
 public class Duty : BaseTask
@@ -32,12 +33,6 @@ public class Duty : BaseTask
     public static Duty Create(DateTime time)
     {
         return new Duty(Menu.Fulltime(time), Menu.Fulltime(time), Menu.InputBox("Enter name: ", ConsoleColor.Blue));
-    }
-    public override void Print()
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.Write(Info());
-        Console.ForegroundColor = ConsoleColor.White;
     }
     public override string Info()
     {
@@ -60,12 +55,6 @@ public class Event : BaseTask
     public static Event Create(DateTime time)
     {
         return new Event(Menu.Fulltime(time), Menu.Fulltime(time), Menu.InputBox("Enter name: ", ConsoleColor.Blue),Menu.EnterInterval(time));
-    }
-    public override void Print()
-    {
-        Console.ForegroundColor = ConsoleColor.Magenta;
-        Console.Write(Info());
-        Console.ForegroundColor = ConsoleColor.White;
     }
     public override string Info()
     {

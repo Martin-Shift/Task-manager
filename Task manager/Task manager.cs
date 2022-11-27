@@ -2,7 +2,7 @@
 using menus;
 using Tasks;
 using Xmls;
-
+using CSharpLesson;
 
 
 namespace Task_manager
@@ -14,6 +14,18 @@ namespace Task_manager
         public TaskList Tasks { get; set; } = new();
         public DateTime Current { get; set; }
         public int CurrentPos { get; set; }
+        public TaskPrinter Tprinter { get; set; } = duty =>
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write(duty.Info());
+            Console.ForegroundColor = ConsoleColor.White;
+        };
+        public EventPrinter Eprinter { get; set; } = e =>
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write(e.Info());
+            Console.ForegroundColor = ConsoleColor.White;
+        };
         public void Save()
         {
             XmlHelper<List<Event>>.Serialize(Tasks.Eventsonly(), SaveFile + "\\Events.xml");
@@ -85,13 +97,15 @@ namespace Task_manager
         {
 
             List<BaseTask> temp = Tasks.DayTasks(Current);
+            
             if (temp.Count == 0) { return; }
             int y = 11 + Calendar.MonthWeek(new DateTime(Current.Year, Current.Month, DateTime.DaysInMonth(Current.Year, Current.Month)));
             Menu.Frame(temp.MaxBy(x => x.Info().Length).Info().Length + 5, y + temp.Count + 2, 1, y, ConsoleColor.DarkBlue);
             for (int i = 0; i < temp.Count; i++)
             {
                 Console.SetCursorPosition(2, y + 1 + i);
-                temp[i].Print();
+                if (temp[i] is Duty) Tprinter.Invoke(temp[i] as Duty);
+                else Eprinter.Invoke(temp[i] as Event);
             }
         }
 
